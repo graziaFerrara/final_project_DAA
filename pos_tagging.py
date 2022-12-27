@@ -13,7 +13,7 @@ The function returns a dictionary whose keys are the words in S and the values a
 
 def pos_tagging(R, S, T, E):
     
-    result = viterbi(R,S,T,E)
+    result = __viterbi(R,S,T,E)
     
     i = 0
     tags = dict()
@@ -23,7 +23,7 @@ def pos_tagging(R, S, T, E):
         
     return tags
 
-def viterbi(R, S, T, E):
+def __viterbi(R, S, T, E):
     
     trellis = dict() # table to hold probability of each state given each observation
     pointers = dict() # table to hold backpointer to best prior state
