@@ -23,8 +23,10 @@ class DeviceSelection:
         for elem in self._N:
             vertex1 = self._graph.insert_vertex(('firstPartition', elem, data[elem]))
             self._graph.insert_edge(self._start, vertex1, 1)
+            self._graph.insert_edge(vertex1, self._start, 0)
             vertex2 = self._graph.insert_vertex(('secondPartition', elem, data[elem]))
             self._graph.insert_edge(vertex2, self._end, 1)
+            self._graph.insert_edge(self._end, vertex2, 0)
             
         for vertex1 in self._graph.vertices():
             if vertex1.element()[0] == 'firstPartition':
@@ -32,7 +34,8 @@ class DeviceSelection:
                     if vertex2.element()[0] == 'secondPartition':
                         if self.__dominates(vertex1.element()[2], vertex2.element()[2]):
                             self._graph.insert_edge(vertex1, vertex2, 1)
-                        
+                            self._graph.insert_edge(vertex2, vertex1, 0)
+           
     def __dominates(self, t1, t2):
         for i in range (self._X-2):
             if t2[i] >= t1[i]:
@@ -45,101 +48,93 @@ class DeviceSelection:
         subset satisfies the non-interleaving property.
     """
     def countDevices(self,):
-        maxMatch, residual, maxflow = self.__FordFulkerson(self._graph)
         
-        # all the nodes not taking part to the maximum matching are in separate subsets
-        subsets = dict()
-        involved = set()
-        i = 0
-        for m in maxMatch:
-            first, second = m.endpoints()
-            subsets[i] = {first.element()[1], second.element()[1]}
-            involved.add(first.element()[1])
-            involved.add(second.element()[1])
-            i += 1
+        maxMatching = self.__FordFulkerson(self._graph, self._start, self._end)
         
-        for i in range(len(subsets)-1):
-            if not subsets[i].isdisjoint(subsets[i+1]):
-                subsets[i] = subsets[i].union(subsets[i+1])
-                del subsets[i+1]
-                
+        self._subsets = dict()
+        curr = dict()
+        
+        count = 0
+        
         for n in self._N:
-            if n not in involved:
-                subsets[len(subsets)] = {n}
-                
-        self._subsets = subsets
-        
-        self._max = {}
- 
-        for i in range (len(subsets)):
-            self._max[i] = RedBlackTreeMap()
-            for elem in subsets[i]:
-                self._max[i][elem] = self._data[elem]
+            if n not in maxMatching.values():
+                self._subsets[count] = RedBlackTreeMap()
+                self._subsets[count][n] = self._data[n]
+                if n in maxMatching.keys():
+                    curr[n] = count
+                count += 1
 
-        return len(subsets)
+        for k,v in maxMatching.items():
+            if k not in curr.keys():
+                for k2,v2 in maxMatching.items():
+                    if k == v2:
+                        self._subsets[curr[k2]][v] = self._data[v]
+            else:
+                self._subsets[curr[k]][v] = self._data[v]        
+        
+        return count
     
-    def __FordFulkerson(self, graph : Graph):
-        flow = dict()
-        maxMatch = []
-        maxflow = 0
-        for edge in graph.edges():
-            flow[edge] = 0
-            
-        residual = self.__residual(graph, flow)
-        
-        paths = self.__buildPaths()
-        
-        for i in range (len(paths)):
-            b = self.__bottleneck(paths[i])
-            if b == 1:
-                maxMatch.append(paths[i][1])
-            maxflow += b
-            flow = self.__augment(flow, paths[i], b)
-            residual = self.__residual(graph, flow)
-            paths = self.__buildPaths()
-            
-        return maxMatch, residual, maxflow
+    def _BFS(self, source, sink, path):
 
-    def __buildPaths(self):
-        paths = dict()
-        i=0
-        for e in self._graph.incident_edges(self._start):
-            v = e.opposite(self._start)
-            if self._graph.degree(v) > 0:
-                paths[i] = [e]
-                other = False
-                for e2 in self._graph.incident_edges(v):
-                    if other:
-                        i += 1
-                        paths[i] = [e]
-                    else:
-                        other = True
-                    paths[i].append(e2)
-                    v2 = e2.opposite(v)
-                    paths[i].append(self._graph.get_edge(v2, self._end))
-                i += 1    
-        return paths 
+        visited = dict()
+        for vertex in self._graph.vertices():
+            visited[vertex] = False
+        queue = []
+        queue.append(source)
+        visited[source] = True
         
-    def __residual(self, graph, flow):
-        residual = dict()
-        for edge in graph.edges():
-            residual[edge] = edge.element() - flow[edge]
-        return residual
-       
-    def __augment(self, f, P, b):
-        for edge in P:
-            # since we only have forward edges in our graph 
-            edge._element -= b
-            f[edge] += b
-        return f       
-        
-    def __bottleneck(self, P):
-        min = P[0].element()
-        for i in range (1, len(P)):
-            if P[i].element() < min:
-                min = P[i].element()
-        return min
+        while queue:
+            u = queue.pop(0)
+            
+            for e in self._graph.incident_edges(u):
+                v = e.opposite(u)
+                if not visited[v] and e.element() > 0:
+                    queue.append(v)
+                    visited[v] = True
+                    path[v] = u
+                    if v == sink:
+                        return True
 
+        return False
+    
+    def __FordFulkerson(self, G, source, sink):
+            
+        path = dict()
+        max_matching = dict()
+        
+        for vertex in G.vertices():
+            path[vertex] = -1
+        
+        while self._BFS(source, sink, path):
+            b = self.__bottleneck(G, path, source, sink)
+            self.__augment_path(G, path, source, sink, b, max_matching)
+                
+        return max_matching
+            
+    def __bottleneck(self, G, path, source, sink):
+        
+        path_flow = float("Inf")
+        
+        s = sink
+        while s != source:
+            path_flow = min(path_flow, G.get_edge(path[s], s).element())
+            s = path[s]
+            
+        return path_flow
+    
+    def __augment_path(self, G, path, source, sink, b, max_matching):
+    
+        v = sink
+        
+        while (v != source):
+            u = path[v]
+            e = G.get_edge(u, v)
+            e._element -= b
+            if (u.element()[0] == 'firstPartition' and v.element()[0] == 'secondPartition'):
+                max_matching[u.element()[1]] = v.element()[1]
+            G.get_edge(v, u)._element += b
+            v = u
+            
     """
         Takes in input an integer i between 0 and C-1, and returns the string identifying the 
         device with highest rank in the i-th subset that has been not returned before, or None 
@@ -150,7 +145,7 @@ class DeviceSelection:
     """
     def nextDevice(self,i):
 
-        tree = self._max[i]
+        tree = self._subsets[i]
         if not tree.is_empty():
             max = tree.first()
             tree.delete(max)
