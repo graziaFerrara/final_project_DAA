@@ -23,10 +23,10 @@ class DeviceSelection:
         for elem in self._N:
             vertex1 = self._graph.insert_vertex(('firstPartition', elem, data[elem]))
             self._graph.insert_edge(self._start, vertex1, 1)
-            self._graph.insert_edge(vertex1, self._start, 0)
+            # self._graph.insert_edge(vertex1, self._start, 0)
             vertex2 = self._graph.insert_vertex(('secondPartition', elem, data[elem]))
             self._graph.insert_edge(vertex2, self._end, 1)
-            self._graph.insert_edge(self._end, vertex2, 0)
+            # self._graph.insert_edge(self._end, vertex2, 0)
             
         for vertex1 in self._graph.vertices():
             if vertex1.element()[0] == 'firstPartition':
@@ -34,7 +34,7 @@ class DeviceSelection:
                     if vertex2.element()[0] == 'secondPartition':
                         if self.__dominates(vertex1.element()[2], vertex2.element()[2]):
                             self._graph.insert_edge(vertex1, vertex2, 1)
-                            self._graph.insert_edge(vertex2, vertex1, 0)
+                            # self._graph.insert_edge(vertex2, vertex1, 0)
            
     def __dominates(self, t1, t2):
         for i in range (self._X-2):
@@ -54,6 +54,16 @@ class DeviceSelection:
         self._subsets = dict()
         curr = dict()
         
+        temp = dict()
+        for edge in self._graph.edges():
+            first, second = edge.endpoints()
+            if (first.element()[0] == 'firstPartition' and second.element()[0] == 'secondPartition' and  edge.element() == 0):
+                temp[first.element()[1]] = second.element()[1]
+                
+        for k,v in temp.items():
+            if k not in temp.values():
+                print(k)
+        
         count = 0
         
         for n in self._N:
@@ -62,6 +72,7 @@ class DeviceSelection:
                 self._subsets[count][n] = self._data[n]
                 if n in maxMatching.keys():
                     curr[n] = count
+                    
                 count += 1
 
         for k,v in maxMatching.items():
@@ -132,7 +143,7 @@ class DeviceSelection:
             e._element -= b
             if (u.element()[0] == 'firstPartition' and v.element()[0] == 'secondPartition'):
                 max_matching[u.element()[1]] = v.element()[1]
-            G.get_edge(v, u)._element += b
+            # G.get_edge(v, u)._element += b
             v = u
             
     """

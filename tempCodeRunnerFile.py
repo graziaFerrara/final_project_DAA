@@ -2,7 +2,7 @@ from pos_tagging import pos_tagging
 from DeviceSelection import DeviceSelection
 from time import time
 
-def read_data():
+def pos_read_data():
     f = open("dataset3/transition",'r')
     t = dict()
     t["Start"] = dict()
@@ -40,7 +40,7 @@ def read_data():
 
     return t, e
 
-def read_sol(r_num):
+def pos_read_sol(r_num):
     f = open("dataset3/sol",'r')
     r = open("dataset3/roles", 'r')
     w = open("dataset3/sentence",'r')
@@ -72,15 +72,13 @@ def read_sol(r_num):
 # E['Jane']={'Noun': 1, 'Modal': 0, 'Verb': 0}
 # out={'Will': 'Modal', 'Mary': 'Noun', 'Spot': 'Verb', 'Jane': 'Noun'}
 
-T, E = read_data()
+T, E = pos_read_data()
 R = tuple(T.keys())[1:len(T)]
 S = tuple(E.keys())
 start = time()
 sol = pos_tagging(R, S, T, E)
 end = time()-start
-out = read_sol(len(T)-1)
-print(R)
-print(S)
+out = pos_read_sol(len(T)-1)
 
 if sol != out:
     print('FAIL')
@@ -89,10 +87,59 @@ else:
     print(end)
 
 #Testing DeviceSelection
-N = ('Device 1', 'Device 2', 'Device 3', 'Device 4', 'Device 5')
-X = 7
-data = {'Device 1': (100, 99, 85, 77, 63), 'Device 2': (101, 88, 82, 75, 60), 'Device 3': (98, 89, 84, 76, 61), 'Device 4': (110, 65, 65, 67, 80), 'Device 5': (95, 80, 80, 63, 60)}
-partition = [['Device 1', 'Device 3', 'Device 5'], ['Device 2'], ['Device 4']]
+def dominates(a, b):
+    done = True
+    for i in range(len(a)):
+        if a[i] <= b[i]:
+            done = False
+            break
+    return done
+
+def verify(data,partition):
+    try:
+        devices = list(data.keys())
+        for sets in partition:
+            for i in range(len(sets)-1):
+                if not dominates(data[sets[i]], data[sets[i+1]]):
+                    return False
+                devices.remove(sets[i])
+            devices.remove(sets[len(sets)-1])
+        if len(devices) != 0:
+            return False
+    except:
+        return False
+    return True
+
+def dev_read_data():
+    data = dict()
+    f = open("dev_dataset1/data",'r')
+    for line in f:
+        sline=line.split()
+        data[sline[0].strip()] = []
+        for i in range(1, len(sline)):
+            data[sline[0].strip()].append(int(sline[i]))
+    f.close()
+    return data
+
+def dev_read_sol():
+    sol = []
+    f = open("dev_dataset1/devsol",'r')
+    for line in f:
+        sline=line.split()
+        subset=[]
+        for dev in sline:
+            subset.append(dev.strip())
+        sol.append(subset)
+    f.close()
+    return sol
+
+# N = ('Device 1', 'Device 2', 'Device 3', 'Device 4', 'Device 5')
+# X = 7
+# data = {'Device 1': (100, 99, 85, 77, 63), 'Device 2': (101, 88, 82, 75, 60), 'Device 3': (98, 89, 84, 76, 61), 'Device 4': (110, 65, 65, 67, 80), 'Device 5': (95, 80, 80, 63, 60)}
+# partition = [['Device 1', 'Device 3', 'Device 5'], ['Device 2'], ['Device 4']]
+data = dev_read_data()
+N = tuple(data.keys())
+X = len(data['D0'])
 
 start = time()
 ds=DeviceSelection(N, X, data)
@@ -105,7 +152,8 @@ for i in range(C):
         dev = ds.nextDevice(i)
 end=time()-start
 
-if sorted(subsets) != sorted(partition):
+partition = dev_read_sol()
+if not verify(data, subsets) or C > len(partition):
     print('FAIL')
 else:
     print('True')
