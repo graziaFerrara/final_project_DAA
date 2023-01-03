@@ -3,11 +3,11 @@ from DeviceSelection import DeviceSelection
 from time import time
 
 def pos_read_data():
-    f = open("dataset3/transition",'r')
+    f = open("dataset1/transition",'r')
     t = dict()
     t["Start"] = dict()
     words = f.readline().split()
-    r = open("dataset3/roles", 'r')
+    r = open("dataset1/roles", 'r')
     roles=[]
     for i in range(len(words)-1):
         roles.append(r.readline().strip())
@@ -25,8 +25,8 @@ def pos_read_data():
         j += 1
     f.close()
 
-    f = open("dataset3/emission",'r')
-    s = open("dataset3/sentence",'r')
+    f = open("dataset1/emission",'r')
+    s = open("dataset1/sentence",'r')
     e = dict()
     j = s.readline().strip()
     for line in f:
@@ -41,9 +41,9 @@ def pos_read_data():
     return t, e
 
 def pos_read_sol(r_num):
-    f = open("dataset3/sol",'r')
-    r = open("dataset3/roles", 'r')
-    w = open("dataset3/sentence",'r')
+    f = open("dataset1/sol",'r')
+    r = open("dataset1/roles", 'r')
+    w = open("dataset1/sentence",'r')
     s = dict()
     words = f.readline().split()
     roles=[]
