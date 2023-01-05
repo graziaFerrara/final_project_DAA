@@ -109,7 +109,7 @@ class DeviceSelection:
         if loops through the edges incident to the sink vertex, which runs in O(n). Finally, it loops
         all over the dominators (which have been computed in the previous loop so they have to be
         less than n) and for each of them it creates a new subset and loops through the dominators
-        in the maxiMatching dictionary starting from the current dominator. This takes at most O(n^2).
+        in the maxMatching dictionary starting from the current dominator. This takes at most O(n^2).
         So the time complexity of this function is O(n^2*m).
         """
         maxMatching = self.__FordFulkerson(self._graph, self._start, self._end)

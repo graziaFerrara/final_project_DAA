@@ -3,11 +3,11 @@ from DeviceSelection import DeviceSelection
 from time import time
 
 def pos_read_data():
-    f = open("dataset1/transition",'r')
+    f = open("pos_dataset1/transition",'r')
     t = dict()
     t["Start"] = dict()
     words = f.readline().split()
-    r = open("dataset1/roles", 'r')
+    r = open("pos_dataset1/roles", 'r')
     roles=[]
     for i in range(len(words)-1):
         roles.append(r.readline().strip())
@@ -25,8 +25,8 @@ def pos_read_data():
         j += 1
     f.close()
 
-    f = open("dataset1/emission",'r')
-    s = open("dataset1/sentence",'r')
+    f = open("pos_dataset1/emission",'r')
+    s = open("pos_dataset1/sentence",'r')
     e = dict()
     j = s.readline().strip()
     for line in f:
@@ -41,9 +41,9 @@ def pos_read_data():
     return t, e
 
 def pos_read_sol(r_num):
-    f = open("dataset1/sol",'r')
-    r = open("dataset1/roles", 'r')
-    w = open("dataset1/sentence",'r')
+    f = open("pos_dataset1/sol",'r')
+    r = open("pos_dataset1/roles", 'r')
+    w = open("pos_dataset1/sentence",'r')
     s = dict()
     words = f.readline().split()
     roles=[]
@@ -139,7 +139,7 @@ def dev_read_sol():
 # partition = [['Device 1', 'Device 3', 'Device 5'], ['Device 2'], ['Device 4']]
 data = dev_read_data()
 N = tuple(data.keys())
-X = len(data['D0'])
+X = len(data['D0'])+2
 
 start = time()
 ds=DeviceSelection(N, X, data)
