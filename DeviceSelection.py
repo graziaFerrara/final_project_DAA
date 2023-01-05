@@ -212,9 +212,6 @@ class DeviceSelection:
         path = dict()
         max_matching = dict()
         
-        for vertex in G.vertices():
-            path[vertex] = -1
-        
         while self.__BFS(source, sink, path):
             self.__augment(G, path, source, sink, max_matching)
                 
