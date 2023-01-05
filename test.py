@@ -3,11 +3,11 @@ from DeviceSelection import DeviceSelection
 from time import time
 
 def pos_read_data():
-    f = open("pos_dataset1/transition",'r')
+    f = open("pos_dataset3/transition",'r')
     t = dict()
     t["Start"] = dict()
     words = f.readline().split()
-    r = open("pos_dataset1/roles", 'r')
+    r = open("pos_dataset3/roles", 'r')
     roles=[]
     for i in range(len(words)-1):
         roles.append(r.readline().strip())
@@ -25,8 +25,8 @@ def pos_read_data():
         j += 1
     f.close()
 
-    f = open("pos_dataset1/emission",'r')
-    s = open("pos_dataset1/sentence",'r')
+    f = open("pos_dataset3/emission",'r')
+    s = open("pos_dataset3/sentence",'r')
     e = dict()
     j = s.readline().strip()
     for line in f:
@@ -41,9 +41,9 @@ def pos_read_data():
     return t, e
 
 def pos_read_sol(r_num):
-    f = open("pos_dataset1/sol",'r')
-    r = open("pos_dataset1/roles", 'r')
-    w = open("pos_dataset1/sentence",'r')
+    f = open("pos_dataset3/sol",'r')
+    r = open("pos_dataset3/roles", 'r')
+    w = open("pos_dataset3/sentence",'r')
     s = dict()
     words = f.readline().split()
     roles=[]
@@ -112,7 +112,7 @@ def verify(data,partition):
 
 def dev_read_data():
     data = dict()
-    f = open("dev_dataset1/data",'r')
+    f = open("dev_dataset3/data",'r')
     for line in f:
         sline=line.split()
         data[sline[0].strip()] = []
@@ -123,7 +123,7 @@ def dev_read_data():
 
 def dev_read_sol():
     sol = []
-    f = open("dev_dataset1/devsol",'r')
+    f = open("dev_dataset3/devsol",'r')
     for line in f:
         sline=line.split()
         subset=[]
