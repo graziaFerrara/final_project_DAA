@@ -105,7 +105,7 @@ class DeviceSelection:
 
         Time complexity
         ---------------
-        Thif function calls the Ford-Fulkerson algorithm on the graph, which runs in O(m*n). Then
+        This function calls the Ford-Fulkerson algorithm on the graph, which runs in O(m*n). Then
         if loops through the edges incident to the sink vertex, which runs in O(n). Finally, it loops
         all over the dominators (which have been computed in the previous loop so they have to be
         less than n) and for each of them it creates a new subset and loops through the dominators
