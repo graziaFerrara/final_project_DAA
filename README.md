@@ -1,49 +1,34 @@
-# WebSite Organization and Search Engine Implementation
+### Problem 1: Part of Speech Tagging
 
-## WebSite Organization
+One of the critical operations in speech recognition involves part-of-speech (POS) tagging. This process assigns roles to each part of a sentence (e.g., noun, verb, modal). Given transition and emission probabilities, we aim to determine the most likely sequence of roles for a given sentence.
 
-### Classes:
-1. **Element**: Models either directories or webpages.
-2. **WebSite**: Represents a website and provides methods for managing its structure.
+#### Function `pos_tagging(R, S, T, E)`
 
-### Public Methods:
-- `WebSite(host)`: Creates a new WebSite object for saving the website hosted at `host`.
-- `getHomePage()`: Returns the home page of the website.
-- `getSiteString()`: Returns a string showing the structure of the website.
-- `insertPage(url, content)`: Saves and returns a new page of the website.
-- `getSiteFromPage(page)`: Given a page, returns the WebSite object it belongs to.
+- **Input:**
+  - `R`: Tuple of roles.
+  - `S`: Tuple of strings representing words in the sentence.
+  - `T`: Dictionary representing transition probabilities between roles.
+  - `E`: Dictionary representing emission probabilities between words and roles.
 
-### Private Methods:
-- `__hasDir(ndir, cdir)`: Checks if a directory exists in the current directory.
-- `__newDir(ndir, cdir)`: Creates a new directory if it doesn't exist.
-- `__hasPage(npag, cdir)`: Checks if a webpage exists in the current directory.
-- `__newPage(npag, cdir)`: Creates a new webpage if it doesn't exist.
-- `__isDir(elem)`: Checks if an element is a directory.
-- `__isPage(elem)`: Checks if an element is a webpage.
+- **Output:**
+  - Dictionary mapping words to assigned roles.
 
-## Search Engine
+### Problem 2: Device Selection
 
-### Classes:
-1. **InvertedIndex**: Represents the core data structure of the search engine.
+In this problem, we need to select a subset of speech recognition devices for further testing. The goal is to choose a subset such that each device either dominates or is dominated by another device in the same subset.
 
-### Public Methods:
-- `InvertedIndex()`: Creates a new empty InvertedIndex.
-- `addWord(keyword)`: Adds a keyword to the InvertedIndex.
-- `addPage(page)`: Processes a webpage and updates the inverted index.
-- `getList(keyword)`: Retrieves the occurrence list for a given keyword.
+#### Class `DeviceSelection`
 
-## SearchEngine Class
+- **Constructor `DeviceSelection(N, X, data)`**
+  - `N`: Tuple of strings identifying the devices.
+  - `X`: Integer representing the maximum sentence length.
+  - `data`: Dictionary mapping devices to performance data.
 
-### Methods:
-- `SearchEngine(namedir)`: Initializes the SearchEngine with a directory containing webpage files.
-- `search(keyword, k)`: Searches for the top k web pages with the maximum occurrences of the keyword.
+- **Method `countDevices()`**
+  - Returns the minimum number of devices needed for testing.
 
-## Efficiency Goals:
-- Constant time complexity for various operations.
-- Linear time complexity for generating site structure.
-- Logarithmic time complexity for directory and page existence checks.
-- Linear time complexity for adding keywords and retrieving occurrence lists.
+- **Method `nextDevice(i)`**
+  - Input: Integer `i` representing the subset index.
+  - Returns the next device to test within the specified subset.
 
-## Note:
-- The implementation aims to optimize efficiency for website organization and search queries.
-- A test dataset is provided for evaluating the correctness and performance of the code.
+These two problems address critical aspects of speech recognition testing and optimization, offering efficient solutions for practical implementation.
