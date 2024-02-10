@@ -1,75 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSite Organization and Search Engine Implementation</title>
-</head>
-<body>
-    <h1>WebSite Organization and Search Engine Implementation</h1>
+# WebSite Organization and Search Engine Implementation
 
-    <h2>WebSite Organization</h2>
+## WebSite Organization
 
-    <h3>Classes:</h3>
-    <ol>
-        <li><strong>Element</strong>: Models either directories or webpages.</li>
-        <li><strong>WebSite</strong>: Represents a website and provides methods for managing its structure.</li>
-    </ol>
+### Classes:
+1. **Element**: Models either directories or webpages.
+2. **WebSite**: Represents a website and provides methods for managing its structure.
 
-    <h3>Public Methods:</h3>
-    <ul>
-        <li><code>WebSite(host)</code>: Creates a new WebSite object for saving the website hosted at <code>host</code>.</li>
-        <li><code>getHomePage()</code>: Returns the home page of the website.</li>
-        <li><code>getSiteString()</code>: Returns a string showing the structure of the website.</li>
-        <li><code>insertPage(url, content)</code>: Saves and returns a new page of the website.</li>
-        <li><code>getSiteFromPage(page)</code>: Given a page, returns the WebSite object it belongs to.</li>
-    </ul>
+### Public Methods:
+- `WebSite(host)`: Creates a new WebSite object for saving the website hosted at `host`.
+- `getHomePage()`: Returns the home page of the website.
+- `getSiteString()`: Returns a string showing the structure of the website.
+- `insertPage(url, content)`: Saves and returns a new page of the website.
+- `getSiteFromPage(page)`: Given a page, returns the WebSite object it belongs to.
 
-    <h3>Private Methods:</h3>
-    <ul>
-        <li><code>__hasDir(ndir, cdir)</code>: Checks if a directory exists in the current directory.</li>
-        <li><code>__newDir(ndir, cdir)</code>: Creates a new directory if it doesn't exist.</li>
-        <li><code>__hasPage(npag, cdir)</code>: Checks if a webpage exists in the current directory.</li>
-        <li><code>__newPage(npag, cdir)</code>: Creates a new webpage if it doesn't exist.</li>
-        <li><code>__isDir(elem)</code>: Checks if an element is a directory.</li>
-        <li><code>__isPage(elem)</code>: Checks if an element is a webpage.</li>
-    </ul>
+### Private Methods:
+- `__hasDir(ndir, cdir)`: Checks if a directory exists in the current directory.
+- `__newDir(ndir, cdir)`: Creates a new directory if it doesn't exist.
+- `__hasPage(npag, cdir)`: Checks if a webpage exists in the current directory.
+- `__newPage(npag, cdir)`: Creates a new webpage if it doesn't exist.
+- `__isDir(elem)`: Checks if an element is a directory.
+- `__isPage(elem)`: Checks if an element is a webpage.
 
-    <h2>Search Engine</h2>
+## Search Engine
 
-    <h3>Classes:</h3>
-    <ol>
-        <li><strong>InvertedIndex</strong>: Represents the core data structure of the search engine.</li>
-    </ol>
+### Classes:
+1. **InvertedIndex**: Represents the core data structure of the search engine.
 
-    <h3>Public Methods:</h3>
-    <ul>
-        <li><code>InvertedIndex()</code>: Creates a new empty InvertedIndex.</li>
-        <li><code>addWord(keyword)</code>: Adds a keyword to the InvertedIndex.</li>
-        <li><code>addPage(page)</code>: Processes a webpage and updates the inverted index.</li>
-        <li><code>getList(keyword)</code>: Retrieves the occurrence list for a given keyword.</li>
-    </ul>
+### Public Methods:
+- `InvertedIndex()`: Creates a new empty InvertedIndex.
+- `addWord(keyword)`: Adds a keyword to the InvertedIndex.
+- `addPage(page)`: Processes a webpage and updates the inverted index.
+- `getList(keyword)`: Retrieves the occurrence list for a given keyword.
 
-    <h2>SearchEngine Class</h2>
+## SearchEngine Class
 
-    <h3>Methods:</h3>
-    <ul>
-        <li><code>SearchEngine(namedir)</code>: Initializes the SearchEngine with a directory containing webpage files.</li>
-        <li><code>search(keyword, k)</code>: Searches for the top k web pages with the maximum occurrences of the keyword.</li>
-    </ul>
+### Methods:
+- `SearchEngine(namedir)`: Initializes the SearchEngine with a directory containing webpage files.
+- `search(keyword, k)`: Searches for the top k web pages with the maximum occurrences of the keyword.
 
-    <h2>Efficiency Goals:</h2>
-    <ul>
-        <li>Constant time complexity for various operations.</li>
-        <li>Linear time complexity for generating site structure.</li>
-        <li>Logarithmic time complexity for directory and page existence checks.</li>
-        <li>Linear time complexity for adding keywords and retrieving occurrence lists.</li>
-    </ul>
+## Efficiency Goals:
+- Constant time complexity for various operations.
+- Linear time complexity for generating site structure.
+- Logarithmic time complexity for directory and page existence checks.
+- Linear time complexity for adding keywords and retrieving occurrence lists.
 
-    <h2>Note:</h2>
-    <ul>
-        <li>The implementation aims to optimize efficiency for website organization and search queries.</li>
-        <li>A test dataset is provided for evaluating the correctness and performance of the code.</li>
-    </ul>
-</body>
-</html>
+## Note:
+- The implementation aims to optimize efficiency for website organization and search queries.
+- A test dataset is provided for evaluating the correctness and performance of the code.
